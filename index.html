@@ -89,7 +89,8 @@
             /* Use CSS variables for width and height */
             width: var(--gallery-item-width);
             height: var(--gallery-item-height);
-            background-color: #f7fafc; /* bg-gray-100 */
+            /*background-color: #f7fafc;  bg-gray-100 */
+            background-color: #ffffff; /* Changed to white for padding effect */
             border-radius: 0.5rem; /* rounded-lg */
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
             overflow: hidden;
@@ -100,7 +101,7 @@
         .gallery-item img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain; /* Ensure the whole image is visible, padding with background-color */
             transition: transform 0.3s ease-in-out; /* transition-transform duration-300 */
         }
 
@@ -218,110 +219,322 @@
             color: #4a5568; /* Text color, similar to info-text */
             font-size: 0.875rem; /* text-sm */
         }
+        
+        /* Zoom Overlay Styles */
+        .zoom-overlay {
+            position: fixed; /* Fixed to cover the entire viewport */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8); /* Dark semi-transparent background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100; /* Ensure it's on top of everything */
+            opacity: 0; /* Initially hidden */
+            visibility: hidden; /* Initially hidden */
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+            cursor: zoom-out; /* Indicate it's clickable to close */
+        }
+
+        .zoom-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .zoom-overlay img {
+            max-width: 90%; /* Max width of the zoomed image */
+            max-height: 90%; /* Max height of the zoomed image */
+            object-fit: contain; /* Ensure the whole image is visible */
+            border-radius: 0.5rem;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); /* Add a subtle shadow */
+            transform: scale(0.8); /* Start smaller for a zoom-in effect */
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .zoom-overlay.active img {
+            transform: scale(1); /* Zoom to actual size when active */
+        }
     </style>
 </head>
 <body>
+    <h1>Hochzeitsfotos Nils & Rebecca Schöneberg</h1>
     <div class="gallery-container">
-        <h1>My Image Gallery</h1>
+        <h2>Feier im Uphof</h2>
 
         <!-- Navigation Buttons -->
-        <button id="scrollLeftBtn" class="nav-button left">&#10094;</button> <!-- Left arrow Unicode -->
-        <button id="scrollRightBtn" class="nav-button right">&#10095;</button> <!-- Right arrow Unicode -->
+        <button id="scrollLeftBtn1" class="nav-button left">&#10094;</button> <!-- Left arrow Unicode -->
+        <button id="scrollRightBtn1" class="nav-button right">&#10095;</button> <!-- Right arrow Unicode -->
 
         <!-- Horizontal Scrollable Gallery -->
-        <div class="scroll-gallery" id="scrollGallery">
+        <div class="scroll-gallery" id="scrollGallery1">
             <!-- Image 1 -->
             <div class="gallery-item">
-                <img src="https://placehold.co/320x240/ADD8E6/FFFFFF?text=Image+1"
-                     alt="Placeholder Image 1">
+                <img src="fotos_feier/DSCF3177.jpg"
+                     alt="Denise+Birte">
                 <div class="overlay">
-                    <span>Scenic View</span>
+                    <span>Denise und Birte</span>
                 </div>
             </div>
 
             <!-- Image 2 -->
             <div class="gallery-item">
-                <img src="https://placehold.co/320x240/F08080/FFFFFF?text=Image+2"
-                     alt="Placeholder Image 2">
+                <img src="fotos_feier/DSCF3198.jpg"
+                     alt="Leo">
                 <div class="overlay">
-                    <span>Cityscape</span>
+                    <span>Leo</span>
                 </div>
             </div>
 
             <!-- Image 3 -->
             <div class="gallery-item">
-                <img src="https://placehold.co/320x240/90EE90/FFFFFF?text=Image+3"
-                     alt="Placeholder Image 3">
+                <img src="fotos_feier/DSCF3207.jpg"
+                     alt="Dieter">
                 <div class="overlay">
-                    <span>Nature Trail</span>
+                    <span>Dieter</span>
                 </div>
             </div>
 
             <!-- Image 4 -->
             <div class="gallery-item">
-                <img src="https://placehold.co/320x240/FFD700/FFFFFF?text=Image+4"
-                     alt="Placeholder Image 4">
+                <img src="fotos_feier/DSCF3232.jpg"
+                     alt="Rede">
                 <div class="overlay">
-                    <span>Abstract Art</span>
+                    <span>Rede</span>
                 </div>
             </div>
 
             <!-- Image 5 -->
             <div class="gallery-item">
-                <img src="https://placehold.co/320x240/87CEEB/FFFFFF?text=Image+5"
-                     alt="Placeholder Image 5">
+                <img src="fotos_feier/DSCF3256.jpg"
+                     alt="Mia">
                 <div class="overlay">
-                    <span>Mountain Landscape</span>
+                    <span>Mia</span>
                 </div>
             </div>
 
             <!-- Image 6 -->
             <div class="gallery-item">
-                <img src="https://placehold.co/320x240/DA70D6/FFFFFF?text=Image+6"
-                     alt="Placeholder Image 6">
+                <img src="fotos_feier/DSCF3273.jpg"
+                     alt="Dimitri">
                 <div class="overlay">
-                    <span>Sunset Scene</span>
+                    <span>Dimitri</span>
                 </div>
             </div>
-            <!-- Add more images here if needed -->
+
+            <!-- Image 7 -->
             <div class="gallery-item">
-                <img src="https://placehold.co/320x240/800000/FFFFFF?text=Image+7"
-                     alt="Placeholder Image 7">
+                <img src="fotos_feier/DSCF3299.jpg"
+                     alt="Uphof1">
                 <div class="overlay">
-                    <span>Forest Path</span>
+                    <span>Uphof 1</span>
                 </div>
             </div>
+
+            <!-- Image 8 -->
             <div class="gallery-item">
-                <img src="https://placehold.co/320x240/4682B4/FFFFFF?text=Image+8"
-                     alt="Placeholder Image 8">
+                <img src="fotos_feier/DSCF3322.jpg"
+                     alt="Samuel">
                 <div class="overlay">
-                    <span>Ocean Waves</span>
+                    <span>Samuel</span>
                 </div>
             </div>
         </div>
-
-        <p class="info-text">
-            To change the image sizes, modify the `--gallery-item-width` and `--gallery-item-height` CSS variables.
-            For the upload button size, adjust the `--upload-button-size` CSS variable in the `style` block.
-            Remember to replace "YOUR_GOOGLE_DRIVE_SHARE_LINK_HERE" with your actual Google Drive folder share link.
-        </p>
     </div>
+
+
+    <div class="gallery-container">
+        <h2>Fotos von der Kirche</h2>
+
+        <!-- Navigation Buttons -->
+        <button id="scrollLeftBtn2" class="nav-button left">&#10094;</button> <!-- Left arrow Unicode -->
+        <button id="scrollRightBtn2" class="nav-button right">&#10095;</button> <!-- Right arrow Unicode -->
+
+        <!-- Horizontal Scrollable Gallery -->
+        <div class="scroll-gallery" id="scrollGallery2">
+            <!-- Image 1 -->
+            <div class="gallery-item">
+                <img src="fotos_kirche/_DSF7385.jpg"
+                     alt="Seifenblasenauszug">
+                <div class="overlay">
+                    <span>Seifenblasenauszug</span>
+                </div>
+            </div>
+
+            <!-- Image 2 -->
+            <div class="gallery-item">
+                <img src="fotos_kirche/_DSF7379.jpg"
+                     alt="Nils trägt Becci">
+                <div class="overlay">
+                    <span>Nils trägt Becci</span>
+                </div>
+            </div>
+
+            <!-- Image 3 -->
+            <div class="gallery-item">
+                <img src="fotos_kirche/_DSF7070.jpg"
+                     alt="Becci umarmt Wolfgang">
+                <div class="overlay">
+                    <span>Becci umarmt Wolfgang</span>
+                </div>
+            </div>
+
+            <!-- Image 4 -->
+            <div class="gallery-item">
+                <img src="fotos_kirche/_DSF7066.jpg"
+                     alt="Reaktion Auszug">
+                <div class="overlay">
+                    <span>Reaktion Auszug</span>
+                </div>
+            </div>
+
+            <!-- Image 5 -->
+            <div class="gallery-item">
+                <img src="fotos_kirche/_DSF7052.jpg"
+                     alt="Auszug Chor">
+                <div class="overlay">
+                    <span>Auszug Chor</span>
+                </div>
+            </div>
+
+            <!-- Image 6 -->
+            <div class="gallery-item">
+                <img src="fotos_kirche/_DSF7036.jpg"
+                     alt="Auszug Ehepaar">
+                <div class="overlay">
+                    <span>Auszug Ehepaar</span>
+                </div>
+            </div>
+
+            <!-- Image 7 -->
+            <div class="gallery-item">
+                <img src="fotos_kirche/_DSF6862.jpg"
+                     alt="Paar Kirche">
+                <div class="overlay">
+                    <span>Paar Kirche</span>
+                </div>
+            </div>
+
+            <!-- Image 8 -->
+            <div class="gallery-item">
+                <img src="fotos_kirche/_DSF6832.jpg"
+                     alt="Chor Einzug">
+                <div class="overlay">
+                    <span>Chor Einzug</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+    <div class="gallery-container">
+        <h2>Fotos vom Paarshooting</h2>
+
+        <!-- Navigation Buttons -->
+        <button id="scrollLeftBtn3" class="nav-button left">&#10094;</button> <!-- Left arrow Unicode -->
+        <button id="scrollRightBtn3" class="nav-button right">&#10095;</button> <!-- Right arrow Unicode -->
+
+        <!-- Horizontal Scrollable Gallery -->
+        <div class="scroll-gallery" id="scrollGallery3">
+            <!-- Image 1 -->
+            <div class="gallery-item">
+                <img src="fotos_shooting/_DSF0006.jpg"
+                     alt="Auf dem Weg">
+                <div class="overlay">
+                    <span>Auf dem Weg</span>
+                </div>
+            </div>
+
+            <!-- Image 2 -->
+            <div class="gallery-item">
+                <img src="fotos_shooting/_DSF0013.jpg"
+                     alt="Auszug">
+                <div class="overlay">
+                    <span>Auszug</span>
+                </div>
+            </div>
+
+            <!-- Image 3 -->
+            <div class="gallery-item">
+                <img src="fotos_shooting/_DSF0079.jpg"
+                     alt="Blumenstrauss">
+                <div class="overlay">
+                    <span>Blumenstrauss</span>
+                </div>
+            </div>
+
+            <!-- Image 4 -->
+            <div class="gallery-item">
+                <img src="fotos_shooting/_DSF0158.jpg"
+                     alt="Hinter Blumn">
+                <div class="overlay">
+                    <span>Hinter Blumen</span>
+                </div>
+            </div>
+
+            <!-- Image 5 -->
+            <div class="gallery-item">
+                <img src="fotos_shooting/_DSF9259.jpg"
+                     alt="Auf dem Baum">
+                <div class="overlay">
+                    <span>Auf dem Baum</span>
+                </div>
+            </div>
+
+            <!-- Image 6 -->
+            <div class="gallery-item">
+                <img src="fotos_shooting/_DSF9335.jpg"
+                     alt="Umarmung vor Blumen">
+                <div class="overlay">
+                    <span>Umarmung vor Blumen</span>
+                </div>
+            </div>
+
+            <!-- Image 7 -->
+            <div class="gallery-item">
+                <img src="fotos_shooting/_DSF9433.jpg"
+                     alt="Im Blumenmeer">
+                <div class="overlay">
+                    <span>Im Blumenmeer</span>
+                </div>
+            </div>
+
+            <!-- Image 8 -->
+            <div class="gallery-item">
+                <img src="fotos_shooting/_DSF9744.jpg"
+                     alt="Auf der Brücke">
+                <div class="overlay">
+                    <span>Auf der Brücke</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <p class="info-text">
+        Vielen Dank für die vielen unvergesslichen Momente!
+    </p>
 
     <!-- New: Google Drive Button with Image and Text (now outside gallery-container) -->
     <div class="gallery-actions">
         <a href="https://drive.google.com/drive/folders/1d35KF9ycOVwNraGsPZ1Ogq5KOzEuN2UZ?usp=sharing" target="_blank" class="drive-button">
             <img src="upload_button.png" alt="Upload Button">
         </a>
-        <span class="drive-button-text">Upload your photos here!</span>
+        <span class="drive-button-text">Ladet eure Photos hier hoch!</span>
     </div>
 
+    <div class="zoom-overlay" id="zoomOverlay">
+        <img src="" alt="Zoomed Image" id="zoomedImage">
+    </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const scrollGallery = document.getElementById('scrollGallery');
-            const scrollLeftBtn = document.getElementById('scrollLeftBtn');
-            const scrollRightBtn = document.getElementById('scrollRightBtn');
+            // Get all gallery containers
+            const galleryContainers = document.querySelectorAll('.gallery-container');
+            const zoomOverlay = document.getElementById('zoomOverlay');
+            const zoomedImage = document.getElementById('zoomedImage');
 
             // Dynamically get the computed width and gap
+            // Using a dummy element to calculate computed styles reliably
             const tempDiv = document.createElement('div');
             tempDiv.style.width = 'var(--gallery-item-width)';
             tempDiv.style.visibility = 'hidden';
@@ -330,80 +543,94 @@
             const itemWidth = parseFloat(getComputedStyle(tempDiv).width); // Get width in pixels
             document.body.removeChild(tempDiv); // Clean up the dummy element
 
-            const galleryStyle = getComputedStyle(scrollGallery);
+            // Get gap from the first scroll gallery found (assuming consistent gap)
+            const firstScrollGallery = document.querySelector('.scroll-gallery');
+            const galleryStyle = getComputedStyle(firstScrollGallery);
             const gapWidth = parseFloat(galleryStyle.columnGap); // Get gap in pixels
 
             const scrollAmount = itemWidth + gapWidth;
 
-            let scrollTimeout; // To debounce scroll events for snapping
+            // Loop through each gallery container to apply independent functionality
+            galleryContainers.forEach(container => {
+                const scrollGallery = container.querySelector('.scroll-gallery');
+                const scrollLeftBtn = container.querySelector('.nav-button.left');
+                const scrollRightBtn = container.querySelector('.nav-button.right');
+                const galleryItems = container.querySelectorAll('.gallery-item');
 
-            // Function to snap to the nearest item
-            function snapToNearestItem() {
-                // Re-enable smooth scroll behavior for the final snap
-                scrollGallery.style.scrollBehavior = 'smooth';
-                // Calculate the target scroll position: nearest multiple of scrollAmount
-                const targetScrollLeft = Math.round(scrollGallery.scrollLeft / scrollAmount) * scrollAmount;
-                // Smoothly scroll to the target position
-                scrollGallery.scrollTo({ left: targetScrollLeft });
-            }
+                let scrollTimeout; // To debounce scroll events for snapping for each gallery
 
-            if (scrollGallery) {
-                // Wheel event for horizontal scrolling
-                scrollGallery.addEventListener('wheel', (event) => {
-                    event.preventDefault();
-                    // Disable smooth scroll temporarily for immediate response during active scrolling
-                    scrollGallery.style.scrollBehavior = 'auto';
-                    scrollGallery.scrollLeft += event.deltaY;
-
-                    // Clear any existing timeout and set a new one to snap after inactivity
-                    clearTimeout(scrollTimeout);
-                    scrollTimeout = setTimeout(snapToNearestItem, 150); // Snap after 150ms of no scrolling
-                });
-
-                // Touch event listeners for horizontal swiping
-                let isDragging = false;
-                let startX;
-                let scrollLeft;
-
-                scrollGallery.addEventListener('touchstart', (e) => {
-                    isDragging = true;
-                    // Disable smooth scroll temporarily when touch dragging starts
-                    scrollGallery.style.scrollBehavior = 'auto';
-                    // Record the initial touch position relative to the gallery's left edge
-                    startX = e.touches[0].pageX - scrollGallery.offsetLeft;
-                    // Record the initial scrollLeft position of the gallery
-                    scrollLeft = scrollGallery.scrollLeft;
-                    // Clear any pending snap-back when dragging starts
-                    clearTimeout(scrollTimeout);
-                });
-
-                scrollGallery.addEventListener('touchend', () => {
-                    isDragging = false;
-                    // Trigger snap-back after touch ends
-                    snapToNearestItem();
-                });
-
-                scrollGallery.addEventListener('touchmove', (e) => {
-                    if (!isDragging) return;
-                    e.preventDefault(); // Prevent vertical scrolling on touch move
-                    const x = e.touches[0].pageX - scrollGallery.offsetLeft;
-                    const walk = (x - startX) * 1.5; // Multiplier for scroll sensitivity
-                    scrollGallery.scrollLeft = scrollLeft - walk;
-                });
-            }
-
-            if (scrollLeftBtn && scrollRightBtn && scrollGallery) {
-                // For button clicks, always use smooth scroll behavior
-                scrollLeftBtn.addEventListener('click', () => {
+                // Function to snap to the nearest item for this specific gallery
+                function snapToNearestItem() {
                     scrollGallery.style.scrollBehavior = 'smooth';
-                    scrollGallery.scrollLeft -= scrollAmount;
-                });
+                    const targetScrollLeft = Math.round(scrollGallery.scrollLeft / scrollAmount) * scrollAmount;
+                    scrollGallery.scrollTo({ left: targetScrollLeft });
+                }
 
-                scrollRightBtn.addEventListener('click', () => {
-                    scrollGallery.style.scrollBehavior = 'smooth';
-                    scrollGallery.scrollLeft += scrollAmount;
+                if (scrollGallery) {
+                    // Wheel event for horizontal scrolling
+                    scrollGallery.addEventListener('wheel', (event) => {
+                        event.preventDefault();
+                        scrollGallery.style.scrollBehavior = 'auto';
+                        scrollGallery.scrollLeft += event.deltaY;
+
+                        clearTimeout(scrollTimeout);
+                        scrollTimeout = setTimeout(snapToNearestItem, 150);
+                    });
+
+                    // Touch event listeners for horizontal swiping
+                    let isDragging = false;
+                    let startX;
+                    let scrollLeft;
+
+                    scrollGallery.addEventListener('touchstart', (e) => {
+                        isDragging = true;
+                        scrollGallery.style.scrollBehavior = 'auto';
+                        startX = e.touches[0].pageX - scrollGallery.offsetLeft;
+                        scrollLeft = scrollGallery.scrollLeft;
+                        clearTimeout(scrollTimeout);
+                    });
+
+                    scrollGallery.addEventListener('touchend', () => {
+                        isDragging = false;
+                        snapToNearestItem();
+                    });
+
+                    scrollGallery.addEventListener('touchmove', (e) => {
+                        if (!isDragging) return;
+                        e.preventDefault();
+                        const x = e.touches[0].pageX - scrollGallery.offsetLeft;
+                        const walk = (x - startX) * 1.5;
+                        scrollGallery.scrollLeft = scrollLeft - walk;
+                    });
+                }
+
+                // Navigation button functionality for this specific gallery
+                if (scrollLeftBtn && scrollRightBtn && scrollGallery) {
+                    scrollLeftBtn.addEventListener('click', () => {
+                        scrollGallery.style.scrollBehavior = 'smooth';
+                        scrollGallery.scrollLeft -= scrollAmount;
+                    });
+
+                    scrollRightBtn.addEventListener('click', () => {
+                        scrollGallery.style.scrollBehavior = 'smooth';
+                        scrollGallery.scrollLeft += scrollAmount;
+                    });
+                }
+
+                // Zoom functionality for images within this specific gallery
+                galleryItems.forEach(item => {
+                    item.addEventListener('click', () => {
+                        const imgSrc = item.querySelector('img').src;
+                        zoomedImage.src = imgSrc;
+                        zoomOverlay.classList.add('active'); // Show the overlay
+                    });
                 });
-            }
+            }); // End of forEach loop for galleryContainers
+
+            // Event listener for closing the global zoom overlay
+            zoomOverlay.addEventListener('click', () => {
+                zoomOverlay.classList.remove('active'); // Hide the overlay
+            });
         });
     </script>
 </body>
