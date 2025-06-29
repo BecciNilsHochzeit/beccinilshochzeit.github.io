@@ -11,6 +11,7 @@
             --gallery-item-width: 20rem; /* Current width: 20rem = 320px */
             --gallery-item-height: 15rem; /* Current height: 15rem = 240px */
             --gallery-gap: 1rem; /* Current gap: 1rem = 16px */
+            --upload-button-size: 64px; /* New variable for upload button size */
         }
 
         /* Base styles */
@@ -18,6 +19,7 @@
             font-family: 'Inter', sans-serif;
             background-color: #f0f2f5; /* Light gray background */
             display: flex;
+            flex-direction: column; /* Changed to column to stack gallery and button */
             justify-content: center;
             align-items: center;
             min-height: 100vh; /* Full viewport height */
@@ -36,9 +38,10 @@
             width: 100%;
             max-width: 64rem; /* max-w-4xl */
             border: 1px solid #e2e8f0; /* border border-gray-200 */
-            position: relative; /* Needed for absolute positioning of buttons */
-            padding-top: 3.5rem; /* Adjust padding to make space for title and buttons */
-            padding-bottom: 3.5rem; /* Adjust padding to make space for info-text and buttons */
+            position: relative; /* Needed for absolute positioning of nav buttons */
+            /* Removed padding-top: 3.5rem; since h1 is no longer absolutely positioned */
+            padding-bottom: 1.5rem; /* Adjusted padding-bottom as button is now outside */
+            margin-bottom: 20px; /* Space between gallery and new button */
         }
 
         .gallery-container h1 {
@@ -47,10 +50,7 @@
             color: #1a202c; /* text-gray-800 */
             margin-bottom: 1.5rem; /* mb-6 */
             text-align: center;
-            position: absolute; /* Position title relative to container */
-            top: 1rem;
-            left: 0;
-            right: 0;
+            /* Removed position: absolute; top: 1rem; left: 0; right: 0; */
         }
 
         /* Scrollable Gallery specific styles */
@@ -134,12 +134,7 @@
             font-size: 0.875rem; /* text-sm */
             margin-top: 1.5rem; /* mt-6 */
             text-align: center;
-            position: absolute;
-            bottom: 1rem;
-            left: 0;
-            right: 0;
-            width: calc(100% - 3rem); /* account for padding */
-            margin-left: 1.5rem;
+            /* Removed absolute positioning, now flows naturally */
         }
 
         /* Navigation Buttons */
@@ -174,6 +169,54 @@
 
         .nav-button.right {
             right: 0.5rem; /* Position on the right side */
+        }
+
+        /* Google Drive Button Styles */
+        .gallery-actions {
+            /* Positioned independently now, not absolutely within gallery-container */
+            display: flex; /* Use flexbox for button and text alignment */
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            gap: 0.5rem; /* Space between image button and text */
+            margin-top: 20px; /* Space from the gallery container */
+        }
+
+        .drive-button {
+            display: flex; /* Use flex to align image and text if any */
+            align-items: center; /* Center image vertically */
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.2s ease-in-out; /* Add subtle hover effect */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 0; /* Remove padding as image will dictate size */
+            line-height: 0; /* Remove extra space from line-height */
+            border: none; /* Remove default button border */
+            cursor: pointer; /* Ensure it's clickable */
+            background: none; /* No background color on the anchor/button itself */
+        }
+
+        .drive-button:hover {
+            transform: translateY(-2px); /* Lift slightly on hover */
+            box-shadow: 0 6px 10px -1px rgba(0, 0, 0, 0.15), 0 3px 5px -1px rgba(0, 0, 0, 0.08);
+        }
+
+        .drive-button img {
+            width: var(--upload-button-size); /* Use CSS variable for width */
+            height: var(--upload-button-size); /* Use CSS variable for height */
+            border-radius: 0.5rem; /* Match parent border-radius */
+            /* Added for slightly transparent effect as requested */
+            opacity: 0.9;
+            transition: opacity 0.2s ease-in-out;
+        }
+
+        .drive-button:hover img {
+            opacity: 1; /* Fully opaque on hover */
+        }
+
+        .drive-button-text {
+            color: #4a5568; /* Text color, similar to info-text */
+            font-size: 0.875rem; /* text-sm */
         }
     </style>
 </head>
@@ -255,20 +298,21 @@
                     <span>Ocean Waves</span>
                 </div>
             </div>
-            
-            
-          <div class="gallery-actions">
-              <a href="https://drive.google.com/drive/folders/1d35KF9ycOVwNraGsPZ1Ogq5KOzEuN2UZ?usp=sharing" target="_blank" class="drive-button">
-                  <img src="upload_button.png" alt="Upload Button">
-              </a>
-              <span class="drive-button-text">Upload your photos here!</span>
-          </div>
         </div>
 
         <p class="info-text">
-            To change the image sizes, modify the `--gallery-item-width` and `--gallery-item-height` CSS variables in the `style` block.
-            The scrolling will automatically adjust.
+            To change the image sizes, modify the `--gallery-item-width` and `--gallery-item-height` CSS variables.
+            For the upload button size, adjust the `--upload-button-size` CSS variable in the `style` block.
+            Remember to replace "YOUR_GOOGLE_DRIVE_SHARE_LINK_HERE" with your actual Google Drive folder share link.
         </p>
+    </div>
+
+    <!-- New: Google Drive Button with Image and Text (now outside gallery-container) -->
+    <div class="gallery-actions">
+        <a href="https://drive.google.com/drive/folders/1d35KF9ycOVwNraGsPZ1Ogq5KOzEuN2UZ?usp=sharing" target="_blank" class="drive-button">
+            <img src="upload_button.png" alt="Upload Button">
+        </a>
+        <span class="drive-button-text">Upload your photos here!</span>
     </div>
 
     <script>
@@ -278,7 +322,6 @@
             const scrollRightBtn = document.getElementById('scrollRightBtn');
 
             // Dynamically get the computed width and gap
-            // Using a dummy element to calculate computed styles reliably if gallery-item isn't yet laid out
             const tempDiv = document.createElement('div');
             tempDiv.style.width = 'var(--gallery-item-width)';
             tempDiv.style.visibility = 'hidden';
