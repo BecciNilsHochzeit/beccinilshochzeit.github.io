@@ -1,1 +1,368 @@
-Hello world test
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scrollable Image Gallery</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Define CSS Variables at root for easy access */
+        :root {
+            --gallery-item-width: 20rem; /* Current width: 20rem = 320px */
+            --gallery-item-height: 15rem; /* Current height: 15rem = 240px */
+            --gallery-gap: 1rem; /* Current gap: 1rem = 16px */
+        }
+
+        /* Base styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5; /* Light gray background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Full viewport height */
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .gallery-container {
+            background-color: #ffffff;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
+            border-radius: 0.75rem; /* rounded-xl */
+            padding: 1.5rem; /* p-6 */
+            width: 100%;
+            max-width: 64rem; /* max-w-4xl */
+            border: 1px solid #e2e8f0; /* border border-gray-200 */
+            position: relative; /* Needed for absolute positioning of buttons */
+            padding-top: 3.5rem; /* Adjust padding to make space for title and buttons */
+            padding-bottom: 3.5rem; /* Adjust padding to make space for info-text and buttons */
+        }
+
+        .gallery-container h1 {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 700; /* font-bold */
+            color: #1a202c; /* text-gray-800 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            text-align: center;
+            position: absolute; /* Position title relative to container */
+            top: 1rem;
+            left: 0;
+            right: 0;
+        }
+
+        /* Scrollable Gallery specific styles */
+        .scroll-gallery {
+            display: flex;
+            gap: var(--gallery-gap); /* Use CSS variable for gap */
+            padding-bottom: 1rem; /* pb-4 */
+            overflow-x: scroll;
+            /* Hide scrollbar for most browsers */
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+            /* Removed scroll-behavior from CSS to control it via JavaScript */
+        }
+
+        /* Custom scrollbar styling for Webkit browsers (Chrome, Safari) */
+        .scroll-gallery::-webkit-scrollbar {
+            height: 8px; /* Height of horizontal scrollbar */
+        }
+
+        .scroll-gallery::-webkit-scrollbar-track {
+            background: #e2e8f0; /* Track color */
+            border-radius: 10px;
+        }
+
+        .scroll-gallery::-webkit-scrollbar-thumb {
+            background: #cbd5e1; /* Thumb color */
+            border-radius: 10px;
+        }
+
+        .scroll-gallery::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; /* Thumb color on hover */
+        }
+
+        .gallery-item {
+            flex-shrink: 0; /* flex-none */
+            /* Use CSS variables for width and height */
+            width: var(--gallery-item-width);
+            height: var(--gallery-item-height);
+            background-color: #f7fafc; /* bg-gray-100 */
+            border-radius: 0.5rem; /* rounded-lg */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease-in-out; /* transition-transform duration-300 */
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.05); /* group-hover:scale-105 */
+        }
+
+        .gallery-item .overlay {
+            position: absolute;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.4); /* bg-black bg-opacity-40 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out; /* transition-opacity duration-300 */
+        }
+
+        .gallery-item:hover .overlay {
+            opacity: 1; /* group-hover:opacity-100 */
+        }
+
+        .gallery-item .overlay span {
+            color: #ffffff;
+            font-size: 1.125rem; /* text-lg */
+            font-weight: 600; /* font-semibold */
+        }
+
+        .info-text {
+            color: #4a5568; /* text-gray-600 */
+            font-size: 0.875rem; /* text-sm */
+            margin-top: 1.5rem; /* mt-6 */
+            text-align: center;
+            position: absolute;
+            bottom: 1rem;
+            left: 0;
+            right: 0;
+            width: calc(100% - 3rem); /* account for padding */
+            margin-left: 1.5rem;
+        }
+
+        /* Navigation Buttons */
+        .nav-button {
+            position: absolute;
+            top: 50%; /* Center vertically */
+            transform: translateY(-50%); /* Adjust for perfect centering */
+            background-color: rgba(0, 0, 0, 0.3); /* Slightly transparent black */
+            color: white;
+            border: none;
+            border-radius: 50%; /* Circular buttons */
+            width: 40px;
+            height: 40px;
+            font-size: 1.5rem; /* Large arrow icon */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease, opacity 0.3s ease;
+            z-index: 10; /* Ensure buttons are above images */
+            opacity: 0.7; /* Initial transparency */
+        }
+
+        .nav-button:hover {
+            background-color: rgba(0, 0, 0, 0.5); /* Less transparent on hover */
+            opacity: 1;
+        }
+
+        .nav-button.left {
+            left: 0.5rem; /* Position on the left side */
+        }
+
+        .nav-button.right {
+            right: 0.5rem; /* Position on the right side */
+        }
+    </style>
+</head>
+<body>
+    <div class="gallery-container">
+        <h1>My Image Gallery</h1>
+
+        <!-- Navigation Buttons -->
+        <button id="scrollLeftBtn" class="nav-button left">&#10094;</button> <!-- Left arrow Unicode -->
+        <button id="scrollRightBtn" class="nav-button right">&#10095;</button> <!-- Right arrow Unicode -->
+
+        <!-- Horizontal Scrollable Gallery -->
+        <div class="scroll-gallery" id="scrollGallery">
+            <!-- Image 1 -->
+            <div class="gallery-item">
+                <img src="https://placehold.co/320x240/ADD8E6/FFFFFF?text=Image+1"
+                     alt="Placeholder Image 1">
+                <div class="overlay">
+                    <span>Scenic View</span>
+                </div>
+            </div>
+
+            <!-- Image 2 -->
+            <div class="gallery-item">
+                <img src="https://placehold.co/320x240/F08080/FFFFFF?text=Image+2"
+                     alt="Placeholder Image 2">
+                <div class="overlay">
+                    <span>Cityscape</span>
+                </div>
+            </div>
+
+            <!-- Image 3 -->
+            <div class="gallery-item">
+                <img src="https://placehold.co/320x240/90EE90/FFFFFF?text=Image+3"
+                     alt="Placeholder Image 3">
+                <div class="overlay">
+                    <span>Nature Trail</span>
+                </div>
+            </div>
+
+            <!-- Image 4 -->
+            <div class="gallery-item">
+                <img src="https://placehold.co/320x240/FFD700/FFFFFF?text=Image+4"
+                     alt="Placeholder Image 4">
+                <div class="overlay">
+                    <span>Abstract Art</span>
+                </div>
+            </div>
+
+            <!-- Image 5 -->
+            <div class="gallery-item">
+                <img src="https://placehold.co/320x240/87CEEB/FFFFFF?text=Image+5"
+                     alt="Placeholder Image 5">
+                <div class="overlay">
+                    <span>Mountain Landscape</span>
+                </div>
+            </div>
+
+            <!-- Image 6 -->
+            <div class="gallery-item">
+                <img src="https://placehold.co/320x240/DA70D6/FFFFFF?text=Image+6"
+                     alt="Placeholder Image 6">
+                <div class="overlay">
+                    <span>Sunset Scene</span>
+                </div>
+            </div>
+            <!-- Add more images here if needed -->
+            <div class="gallery-item">
+                <img src="https://placehold.co/320x240/800000/FFFFFF?text=Image+7"
+                     alt="Placeholder Image 7">
+                <div class="overlay">
+                    <span>Forest Path</span>
+                </div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://placehold.co/320x240/4682B4/FFFFFF?text=Image+8"
+                     alt="Placeholder Image 8">
+                <div class="overlay">
+                    <span>Ocean Waves</span>
+                </div>
+            </div>
+            
+            
+          <div class="gallery-actions">
+              <a href="https://drive.google.com/drive/folders/1d35KF9ycOVwNraGsPZ1Ogq5KOzEuN2UZ?usp=sharing" target="_blank" class="drive-button">
+                  <img src="upload_button.png" alt="Upload Button">
+              </a>
+              <span class="drive-button-text">Upload your photos here!</span>
+          </div>
+        </div>
+
+        <p class="info-text">
+            To change the image sizes, modify the `--gallery-item-width` and `--gallery-item-height` CSS variables in the `style` block.
+            The scrolling will automatically adjust.
+        </p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const scrollGallery = document.getElementById('scrollGallery');
+            const scrollLeftBtn = document.getElementById('scrollLeftBtn');
+            const scrollRightBtn = document.getElementById('scrollRightBtn');
+
+            // Dynamically get the computed width and gap
+            // Using a dummy element to calculate computed styles reliably if gallery-item isn't yet laid out
+            const tempDiv = document.createElement('div');
+            tempDiv.style.width = 'var(--gallery-item-width)';
+            tempDiv.style.visibility = 'hidden';
+            tempDiv.style.position = 'absolute';
+            document.body.appendChild(tempDiv);
+            const itemWidth = parseFloat(getComputedStyle(tempDiv).width); // Get width in pixels
+            document.body.removeChild(tempDiv); // Clean up the dummy element
+
+            const galleryStyle = getComputedStyle(scrollGallery);
+            const gapWidth = parseFloat(galleryStyle.columnGap); // Get gap in pixels
+
+            const scrollAmount = itemWidth + gapWidth;
+
+            let scrollTimeout; // To debounce scroll events for snapping
+
+            // Function to snap to the nearest item
+            function snapToNearestItem() {
+                // Re-enable smooth scroll behavior for the final snap
+                scrollGallery.style.scrollBehavior = 'smooth';
+                // Calculate the target scroll position: nearest multiple of scrollAmount
+                const targetScrollLeft = Math.round(scrollGallery.scrollLeft / scrollAmount) * scrollAmount;
+                // Smoothly scroll to the target position
+                scrollGallery.scrollTo({ left: targetScrollLeft });
+            }
+
+            if (scrollGallery) {
+                // Wheel event for horizontal scrolling
+                scrollGallery.addEventListener('wheel', (event) => {
+                    event.preventDefault();
+                    // Disable smooth scroll temporarily for immediate response during active scrolling
+                    scrollGallery.style.scrollBehavior = 'auto';
+                    scrollGallery.scrollLeft += event.deltaY;
+
+                    // Clear any existing timeout and set a new one to snap after inactivity
+                    clearTimeout(scrollTimeout);
+                    scrollTimeout = setTimeout(snapToNearestItem, 150); // Snap after 150ms of no scrolling
+                });
+
+                // Touch event listeners for horizontal swiping
+                let isDragging = false;
+                let startX;
+                let scrollLeft;
+
+                scrollGallery.addEventListener('touchstart', (e) => {
+                    isDragging = true;
+                    // Disable smooth scroll temporarily when touch dragging starts
+                    scrollGallery.style.scrollBehavior = 'auto';
+                    // Record the initial touch position relative to the gallery's left edge
+                    startX = e.touches[0].pageX - scrollGallery.offsetLeft;
+                    // Record the initial scrollLeft position of the gallery
+                    scrollLeft = scrollGallery.scrollLeft;
+                    // Clear any pending snap-back when dragging starts
+                    clearTimeout(scrollTimeout);
+                });
+
+                scrollGallery.addEventListener('touchend', () => {
+                    isDragging = false;
+                    // Trigger snap-back after touch ends
+                    snapToNearestItem();
+                });
+
+                scrollGallery.addEventListener('touchmove', (e) => {
+                    if (!isDragging) return;
+                    e.preventDefault(); // Prevent vertical scrolling on touch move
+                    const x = e.touches[0].pageX - scrollGallery.offsetLeft;
+                    const walk = (x - startX) * 1.5; // Multiplier for scroll sensitivity
+                    scrollGallery.scrollLeft = scrollLeft - walk;
+                });
+            }
+
+            if (scrollLeftBtn && scrollRightBtn && scrollGallery) {
+                // For button clicks, always use smooth scroll behavior
+                scrollLeftBtn.addEventListener('click', () => {
+                    scrollGallery.style.scrollBehavior = 'smooth';
+                    scrollGallery.scrollLeft -= scrollAmount;
+                });
+
+                scrollRightBtn.addEventListener('click', () => {
+                    scrollGallery.style.scrollBehavior = 'smooth';
+                    scrollGallery.scrollLeft += scrollAmount;
+                });
+            }
+        });
+    </script>
+</body>
+</html>
+
