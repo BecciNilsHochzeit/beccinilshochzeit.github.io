@@ -435,12 +435,12 @@
     
     <div id="password-overlay">
         <div id="password-section">
-            <label for="passwordInput">Enter Password:</label>
+            <label for="passwordInput">Bitte Passwort eingeben:</label>
             <div class="password-input-container">
                 <input type="password" id="passwordInput">
                 <span class="material-icons password-toggle-icon" id="passwordToggle">visibility</span>
             </div>
-            <button id="unlockButton">Unlock All Galleries</button>
+            <button id="unlockButton">Zu den Hochzeitsfotos!</button>
             <div id="message" class="message"></div>
         </div>
     </div>
@@ -784,13 +784,13 @@
 
             if (!password) {
                 // Keep password overlay if no password is entered
-                messageDiv.textContent = 'Please enter a password.';
+                messageDiv.textContent = 'Bitte Passwort eingebn.';
                 messageDiv.style.color = 'red';
                 return;
             }
 
             if (!correctPasswordHash) {
-                messageDiv.textContent = 'Password system not ready. Please try again or refresh.';
+                messageDiv.textContent = 'Passwort-System ist noch nicht bereit. Unbekannter Fehler.';
                 messageDiv.style.color = 'orange';
                 console.error('Correct password hash not loaded yet when unlock button clicked.');
                 return;
@@ -799,7 +799,7 @@
             try {
                 const enteredPasswordHash = await hashUserInput(password);
                 if (enteredPasswordHash !== correctPasswordHash) {
-                    messageDiv.textContent = 'Incorrect password. Please try again.';
+                    messageDiv.textContent = 'Falsches Passwort. Bitte versuche es nochmal!';
                     messageDiv.style.color = 'red';
                     // Do NOT hide the overlay if password is wrong
                     passwordInput.value = ''; // Clear password field
@@ -808,7 +808,7 @@
                 }
             } catch (hashError) {
                 console.error('Error hashing user input for comparison:', hashError);
-                messageDiv.textContent = 'An internal error occurred during password validation.';
+                messageDiv.textContent = 'Interner Fehler während dem Password-Vergleich.';
                 messageDiv.style.color = 'red';
                 return; // Stop execution
             }
@@ -854,7 +854,7 @@
                     currentGalleryDiv.innerHTML = `
                         <div class="gallery-placeholder" id="placeholder-${id}">
                             <div class="spinner"></div>
-                            <p>Gallery is being loaded...</p>
+                            <p>Bilder werden geladen... Bitte warten!</p>
                         </div>
                     `;
                     currentGalleryDiv.classList.remove('loaded-grid'); // Ensure grid layout is off initially
