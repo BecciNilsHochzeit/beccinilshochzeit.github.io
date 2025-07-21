@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hochzeit Nils &amp; Becci</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         /* Define CSS Variables at root for easy access */
         :root {
@@ -256,10 +257,194 @@
         .zoom-overlay.active img {
             transform: scale(1); /* Zoom to actual size when active */
         }
+
+
+        /* NEW: Styles for the individual gallery loading indicators */
+        .gallery-placeholder {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 150px; /* Give it some height so spinner is visible */
+            width: 100%;
+            color: #555;
+            font-size: 1.1em;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .gallery-placeholder .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-top: 4px solid #3498db; /* Blue spinner */
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite; /* Animation defined below */
+            margin-bottom: 15px;
+        }
+
+        .gallery-placeholder p {
+            margin: 0;
+        }
+
+        /* Keyframe animation for the spinner */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Optional: Style for a 'failed' state if a gallery completely errors out */
+        .gallery-placeholder.error {
+            color: red;
+        }
+        .gallery-placeholder.error .spinner {
+            border-top: 4px solid red; /* Red spinner on error */
+        }
+        /* --- NEW: Full-page overlay styling --- */
+        #password-overlay {
+            position: fixed; /* Fixed to the viewport */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95); /* Semi-transparent dark background */
+            display: flex; /* Use flexbox to center content */
+            justify-content: center; /* Center horizontally */
+            align-items: center;   /* Center vertically */
+            z-index: 2000; /* Ensure it's on top of everything else (higher than zoom overlay) */
+            transition: opacity 0.5s ease-out, visibility 0.5s ease-out; /* For a smooth fade out effect */
+        }
+
+        #password-overlay.hidden {
+            opacity: 0; /* Fade out */
+            visibility: hidden; /* Hide from screen readers and interaction */
+            pointer-events: none; /* Allow clicks to pass through once hidden */
+        }
+        /* --- END NEW Overlay --- */
+
+
+        /* Adjust password-section styling to look good within the overlay */
+        #password-section {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 15px; /* Space between elements */
+            max-width: 90%; /* Responsive width */
+            width: 400px; /* Max width for the password box */
+        }
+
+        #password-section label {
+            font-size: 1.2em;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        #passwordInput { /* <--- CHANGED FROM '#password-section input[type="password"]' */
+            padding: 12px 40px 12px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1.1em;
+            width: 100%;
+            box-sizing: border-box;
+            height: 48px;
+            outline: none;
+        }
+
+
+        #password-section button {
+            /* Basic styling */
+            padding: 15px 0; /* Slightly increased vertical padding for more prominence */
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px; /* Slightly more rounded corners */
+            font-size: 1.15em; /* Slightly larger font for impact */
+            font-family: 'Inter', sans-serif; /* Apply the Inter font */
+            font-weight: 600; /* Make the text a bit bolder */
+            cursor: pointer;
+            width: 100%;
+            box-sizing: border-box; /* Ensures padding is included in the 100% width */
+            outline: none; /* Removes the default blue outline on focus */
+
+            /* --- Responsive & Nicer Additions --- */
+            /* Initial subtle shadow for depth */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            /* Smooth transitions for interactive effects */
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        #password-section button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+            transform: translateY(-3px); /* Lifts the button slightly */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Stronger shadow on hover */
+        }
+        
+        #password-section button:active {
+            background-color: #003d80; /* Even darker blue when clicked */
+            transform: translateY(0); /* "Presses" the button down */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Flatter shadow when pressed */
+        }
+
+        /* Accessibility: Custom focus style (for keyboard navigation) */
+        #password-section button:focus-visible {
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5); /* A visible blue glow when focused via keyboard */
+        }
+
+        #password-section .message {
+            margin-top: 10px;
+            font-size: 1em;
+            font-weight: bold;
+        }
+        /* --- NEW STYLES FOR PASSWORD TOGGLE --- */
+        .password-input-container {
+            position: relative; /* Essential for positioning the icon inside */
+            width: 100%; /* Ensures it takes full width like the button */
+        }
+
+        .password-toggle-icon {
+            position: absolute;
+            right: 15px; /* Adjust icon's distance from the right edge */
+            top: 50%;
+            transform: translateY(-50%); /* Vertically centers the icon */
+            cursor: pointer;
+            color: #888; /* Icon color */
+            font-size: 1.2em; /* Icon size */
+            user-select: none; /* Prevents text selection when clicking the icon */
+            visibility: hidden; /* Initially hidden when input is empty */
+            opacity: 0;
+            transition: visibility 0.2s, opacity 0.2s; /* Smooth transition for show/hide */
+        }
+        .password-toggle-icon.visible {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Adjust input padding to prevent text from going under the icon */
+        #passwordInput {
+            padding-right: 40px; /* Make space for the icon (adjust if your icon is larger) */
+        }
+        .message { color: red; margin-top: 10px; }
     </style>
 </head>
 <body>
     <h1>Hochzeitsfotos Nils & Rebecca Schöneberg</h1>
+    
+    <div id="password-overlay">
+        <div id="password-section">
+            <label for="passwordInput">Enter Password:</label>
+            <div class="password-input-container">
+                <input type="password" id="passwordInput">
+                <span class="material-icons password-toggle-icon" id="passwordToggle">visibility</span>
+            </div>
+            <button id="unlockButton">Unlock All Galleries</button>
+            <div id="message" class="message"></div>
+        </div>
+    </div>
+
     <div class="gallery-container">
         <h2>Feier im Uphof</h2>
 
@@ -269,824 +454,6 @@
 
         <!-- Horizontal Scrollable Gallery -->
         <div class="scroll-gallery" id="scrollGallery1">
-            <!-- Image 1 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSCF3177.jpg"
-                     alt="Denise+Birte">
-                <div class="overlay">
-                    <span>Denise und Birte</span>
-                </div>
-            </div>
-
-            <!-- Image 2 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSCF3195.jpg"
-                     alt="Leo">
-                <div class="overlay">
-                    <span>Leo</span>
-                </div>
-            </div>
-
-            <!-- Image 3 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSCF3207.jpg"
-                     alt="Dieter">
-                <div class="overlay">
-                    <span>Dieter</span>
-                </div>
-            </div>
-
-            <!-- Image 4 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSCF3118.jpg"
-                     alt="Wolfgang">
-                <div class="overlay">
-                    <span>Wolfgang</span>
-                </div>
-            </div>
-
-            <!-- Image 5 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSCF3146.jpg"
-                     alt="Coole Socken">
-                <div class="overlay">
-                    <span>Coole Socken</span>
-                </div>
-            </div>
-
-            <!-- Image 6 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSCF3149.jpg"
-                     alt="Gesang">
-                <div class="overlay">
-                    <span>Gesang</span>
-                </div>
-            </div>
-
-            <!-- Image 7 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSCF3150.jpg"
-                     alt="Gesang 2">
-                <div class="overlay">
-                    <span>Gesang 2</span>
-                </div>
-            </div>
-
-            <!-- Image 8 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSCF3157.jpg"
-                     alt="Fotograf">
-                <div class="overlay">
-                    <span>Fotograf</span>
-                </div>
-            </div>
-
-            <!-- Image 9 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSCF3186.jpg"
-                     alt="Wolfgang Katha">
-                <div class="overlay">
-                    <span>Wolfgang Katha</span>
-                </div>
-            </div>
-
-            <!-- Image 10 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSCF3194.jpg"
-                     alt="Leon">
-                <div class="overlay">
-                    <span>Leon</span>
-                </div>
-            </div>
-
-            <!-- Image 11 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSCF3355.jpg"
-                     alt="Gemütlich">
-                <div class="overlay">
-                    <span>Gemütlich</span>
-                </div>
-            </div>
-
-            <!-- Image 12 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF7463.jpg"
-                     alt="Im Garten">
-                <div class="overlay">
-                    <span>Im Garten</span>
-                </div>
-            </div>
-
-            <!-- Image 13 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF7695.jpg"
-                     alt="Gruppe 1">
-                <div class="overlay">
-                    <span>Gruppe 1</span>
-                </div>
-            </div>
-
-            <!-- Image 14 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF7722.jpg"
-                     alt="Gruppe 2">
-                <div class="overlay">
-                    <span>Gruppe 2</span>
-                </div>
-            </div>
-
-            <!-- Image 15 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF7727.jpg"
-                     alt="Gruppe 3">
-                <div class="overlay">
-                    <span>Gruppe 3</span>
-                </div>
-            </div>
-
-            <!-- Image 16 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF7730.jpg"
-                     alt="Gruppe 4">
-                <div class="overlay">
-                    <span>Gruppe 4</span>
-                </div>
-            </div>
-
-            <!-- Image 17 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF7748.jpg"
-                     alt="Gruppe 5">
-                <div class="overlay">
-                    <span>Gruppe 5</span>
-                </div>
-            </div>
-
-            <!-- Image 18 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/wa_6.jpeg"
-                     alt="Wir machen den Weg frei">
-                <div class="overlay">
-                    <span>Wir machen den Weg frei</span>
-                </div>
-            </div>
-
-            <!-- Image 19 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/wa_7.jpeg"
-                     alt="Wir machen den Weg frei 2">
-                <div class="overlay">
-                    <span>Wir machen den Weg frei 2</span>
-                </div>
-            </div>
-
-            <!-- Image 20 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/wa_9.jpeg"
-                     alt="Wir machen den Weg frei 3">
-                <div class="overlay">
-                    <span>Wir machen den Weg frei 3</span>
-                </div>
-            </div>
-
-            <!-- Image 21 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/wa_10.jpeg"
-                     alt="Wir machen den Weg frei 4">
-                <div class="overlay">
-                    <span>Wir machen den Weg frei 4</span>
-                </div>
-            </div>
-
-            <!-- Image 22 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSCF3227.jpg"
-                     alt="Rede">
-                <div class="overlay">
-                    <span>Rede</span>
-                </div>
-            </div>
-
-            <!-- Image 23 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSCF3232.jpg"
-                     alt="Rede 2">
-                <div class="overlay">
-                    <span>Rede 2</span>
-                </div>
-            </div>
-
-            <!-- Image 24 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF7585.jpg"
-                     alt="Rede 3">
-                <div class="overlay">
-                    <span>Rede 3</span>
-                </div>
-            </div>
-
-            <!-- Image 25 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSCF3216.jpg"
-                     alt="Rede 4">
-                <div class="overlay">
-                    <span>Rede 4</span>
-                </div>
-            </div>
-
-            <!-- Image 26 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSCF3347.jpg"
-                     alt="Vor der Scheune">
-                <div class="overlay">
-                    <span>Vor der Scheune</span>
-                </div>
-            </div>
-
-            <!-- Image 27 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF7430.jpg"
-                     alt="Vor der Scheune 2">
-                <div class="overlay">
-                    <span>Vor der Scheune 2</span>
-                </div>
-            </div>
-
-            <!-- Image 28 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF7442.jpg"
-                     alt="Vor der Scheune 3">
-                <div class="overlay">
-                    <span>Vor der Scheune 3</span>
-                </div>
-            </div>
-
-            <!-- Image 29 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSCF3280.jpg"
-                     alt="Vor der Scheune 4">
-                <div class="overlay">
-                    <span>Vor der Scheune 4</span>
-                </div>
-            </div>
-
-            <!-- Image 30 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSCF3273.jpg"
-                     alt="Innen">
-                <div class="overlay">
-                    <span>Innen</span>
-                </div>
-            </div>
-
-            <!-- Image 31 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSCF3293.jpg"
-                     alt="Innen 2">
-                <div class="overlay">
-                    <span>Innen 2</span>
-                </div>
-            </div>
-
-            <!-- Image 32 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSCF3299.jpg"
-                     alt="Innen 3">
-                <div class="overlay">
-                    <span>Innen 3</span>
-                </div>
-            </div>
-
-            <!-- Image 33 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSCF3322.jpg"
-                     alt="Innen 4">
-                <div class="overlay">
-                    <span>Innen 4</span>
-                </div>
-            </div>
-
-            <!-- Image 34 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF7621.jpg"
-                     alt="Duo">
-                <div class="overlay">
-                    <span>Duo</span>
-                </div>
-            </div>
-
-            <!-- Image 35 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF7634.jpg"
-                     alt="Ankunft">
-                <div class="overlay">
-                    <span>Ankunft</span>
-                </div>
-            </div>
-
-            <!-- Image 36 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF7604.jpg"
-                     alt="Aufgetischt">
-                <div class="overlay">
-                    <span>Aufgetischt</span>
-                </div>
-            </div>
-
-            <!-- Image 37 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF7608.jpg"
-                     alt="Aufgetischt 2">
-                <div class="overlay">
-                    <span>Aufgetischt 2</span>
-                </div>
-            </div>
-
-            <!-- Image 38 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF7614.jpg"
-                     alt="Aufgetischt 3">
-                <div class="overlay">
-                    <span>Aufgetischt 3</span>
-                </div>
-            </div>
-
-            <!-- Image 39 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSCF3256.jpg"
-                     alt="Aufgetischt 4">
-                <div class="overlay">
-                    <span>Aufgetischt 4</span>
-                </div>
-            </div>
-
-            <!-- Image 40 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF7642.jpg"
-                     alt="Geburtstagskind">
-                <div class="overlay">
-                    <span>Geburtstagskind</span>
-                </div>
-            </div>
-
-            <!-- Image 41 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF8178.jpg"
-                     alt="Fotograf in klein">
-                <div class="overlay">
-                    <span>Fotograf in klein</span>
-                </div>
-            </div>
-
-            <!-- Image 42 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/wa_1.jpeg"
-                     alt="Deko">
-                <div class="overlay">
-                    <span>Deko</span>
-                </div>
-            </div>
-
-            <!-- Image 43 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSCF3744.jpg"
-                     alt="Deko 2">
-                <div class="overlay">
-                    <span>Deko 2</span>
-                </div>
-            </div>
-
-            <!-- Image 44 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSCF3398.jpg"
-                     alt="Maya's Rede">
-                <div class="overlay">
-                    <span>Maya's Rede</span>
-                </div>
-            </div>
-
-            <!-- Image 45 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/wa_5.jpeg"
-                     alt="Deko">
-                <div class="overlay">
-                    <span>Deko</span>
-                </div>
-            </div>
-
-            <!-- Image 46 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSCF3423.jpg"
-                     alt="Spiel 1">
-                <div class="overlay">
-                    <span>Spiel 1</span>
-                </div>
-            </div>
-
-            <!-- Image 47 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSCF3407.jpg"
-                     alt="Spiel 2">
-                <div class="overlay">
-                    <span>Spiel 2</span>
-                </div>
-            </div>
-
-            <!-- Image 48 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSCF3431.jpg"
-                     alt="Spiel 3">
-                <div class="overlay">
-                    <span>Spiel 3</span>
-                </div>
-            </div>
-
-            <!-- Image 49 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSCF3602.jpg"
-                     alt="Spiel 4">
-                <div class="overlay">
-                    <span>Spiel 4</span>
-                </div>
-            </div>
-
-            <!-- Image 50 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSCF3764.jpg"
-                     alt="Spiel 5">
-                <div class="overlay">
-                    <span>Spiel 5</span>
-                </div>
-            </div>
-
-            <!-- Image 51 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/wa_4.jpeg"
-                     alt="Brauttisch">
-                <div class="overlay">
-                    <span>Brauttisch</span>
-                </div>
-            </div>
-
-            <!-- Image 52 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSCF3748.jpg"
-                     alt="Gespräch">
-                <div class="overlay">
-                    <span>Gespräch</span>
-                </div>
-            </div>
-
-            <!-- Image 53 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSCF3802.jpg"
-                     alt="Entspannt">
-                <div class="overlay">
-                    <span>Entspannt</span>
-                </div>
-            </div>
-
-            <!-- Image 54 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSCF3808.jpg"
-                     alt="Vater und Sohn">
-                <div class="overlay">
-                    <span>Vater und Sohn</span>
-                </div>
-            </div>
-
-            <!-- Image 55 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF7424.jpg"
-                     alt="DJ">
-                <div class="overlay">
-                    <span>DJ</span>
-                </div>
-            </div>
-
-            <!-- Image 56 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF8222.jpg"
-                     alt="Tanz 1">
-                <div class="overlay">
-                    <span>Tanz 1</span>
-                </div>
-            </div>
-
-            <!-- Image 57 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF8224.jpg"
-                     alt="Tanz 2">
-                <div class="overlay">
-                    <span>Tanz 2</span>
-                </div>
-            </div>
-
-            <!-- Image 58 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF8236.jpg"
-                     alt="Tanz 3">
-                <div class="overlay">
-                    <span>Tanz 3</span>
-                </div>
-            </div>
-
-            <!-- Image 59 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF8285.jpg"
-                     alt="Tanz 4">
-                <div class="overlay">
-                    <span>Tanz 4</span>
-                </div>
-            </div>
-
-            <!-- Image 60 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF8317.jpg"
-                     alt="Vater Tochter Tanz 1">
-                <div class="overlay">
-                    <span>Vater Tochter Tanz 1</span>
-                </div>
-            </div>
-
-            <!-- Image 61 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF8321.jpg"
-                     alt="Vater Tochter Tanz 2">
-                <div class="overlay">
-                    <span>Vater Tochter Tanz 2</span>
-                </div>
-            </div>
-
-            <!-- Image 62 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF8326.jpg"
-                     alt="Vater Tochter Tanz 3">
-                <div class="overlay">
-                    <span>Vater Tochter Tanz 3</span>
-                </div>
-            </div>
-
-            <!-- Image 63 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF8330.jpg"
-                     alt="Mutter Sohn Tanz">
-                <div class="overlay">
-                    <span>Mutter Sohn Tanz</span>
-                </div>
-            </div>
-
-            <!-- Image 64 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF8353.jpg"
-                     alt="Alle Tanzen">
-                <div class="overlay">
-                    <span>Alle Tanzen</span>
-                </div>
-            </div>
-
-            <!-- Image 65 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF8418.jpg"
-                     alt="Alle Tanzen 2">
-                <div class="overlay">
-                    <span>Alle Tanzen 2</span>
-                </div>
-            </div>
-
-            <!-- Image 66 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF8443.jpg"
-                     alt="Alle Tanzen 3">
-                <div class="overlay">
-                    <span>Alle Tanzen 3</span>
-                </div>
-            </div>
-
-            <!-- Image 67 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF8465.jpg"
-                     alt="Alle Tanzen 4">
-                <div class="overlay">
-                    <span>Alle Tanzen 4</span>
-                </div>
-            </div>
-
-            <!-- Image 68 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF8468.jpg"
-                     alt="Alle Tanzen 5">
-                <div class="overlay">
-                    <span>Alle Tanzen 5</span>
-                </div>
-            </div>
-
-            <!-- Image 69 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF8490.jpg"
-                     alt="Alle Tanzen 6">
-                <div class="overlay">
-                    <span>Alle Tanzen 6</span>
-                </div>
-            </div>
-
-            <!-- Image 70 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF8496.jpg"
-                     alt="Alle Tanzen 7">
-                <div class="overlay">
-                    <span>Alle Tanzen 7</span>
-                </div>
-            </div>
-
-            <!-- Image 71 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF8513.jpg"
-                     alt="Alle Tanzen 8">
-                <div class="overlay">
-                    <span>Alle Tanzen 8</span>
-                </div>
-            </div>
-
-            <!-- Image 72 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/wa_2.jpeg"
-                     alt="Alle Tanzen 9">
-                <div class="overlay">
-                    <span>Alle Tanzen 9</span>
-                </div>
-            </div>
-
-            <!-- Image 73 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF8528.jpg"
-                     alt="Schirmtanz">
-                <div class="overlay">
-                    <span>Schirmtanz</span>
-                </div>
-            </div>
-
-            <!-- Image 74 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF8534.jpg"
-                     alt="Schirmtanz 2">
-                <div class="overlay">
-                    <span>Schirmtanz 2</span>
-                </div>
-            </div>
-
-            <!-- Image 75 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/wa_8.jpeg"
-                     alt="Schirmtanz 3">
-                <div class="overlay">
-                    <span>Schirmtanz 3</span>
-                </div>
-            </div>
-
-            <!-- Image 76 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF8672.jpg"
-                     alt="Tanzstimmung">
-                <div class="overlay">
-                    <span>Tanzstimmung</span>
-                </div>
-            </div>
-
-            <!-- Image 77 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF8690.jpg"
-                     alt="Tanzstimmung 2">
-                <div class="overlay">
-                    <span>Tanzstimmung 2</span>
-                </div>
-            </div>
-
-            <!-- Image 78 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF8728.jpg"
-                     alt="Tanzstimmung 3">
-                <div class="overlay">
-                    <span>Tanzstimmung 3</span>
-                </div>
-            </div>
-
-            <!-- Image 79 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF8775.jpg"
-                     alt="Tanzstimmung 4">
-                <div class="overlay">
-                    <span>Tanzstimmung 4</span>
-                </div>
-            </div>
-
-            <!-- Image 80 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF8795.jpg"
-                     alt="Hochzeitstorte">
-                <div class="overlay">
-                    <span>Hochzeitstorte</span>
-                </div>
-            </div>
-
-            <!-- Image 81 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF8795_zoom.jpg"
-                     alt="Hochzeitstorte 2">
-                <div class="overlay">
-                    <span>Hochzeitstorte 2</span>
-                </div>
-            </div>
-
-            <!-- Image 82 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF8797.jpg"
-                     alt="Hochzeitstorte 3">
-                <div class="overlay">
-                    <span>Hochzeitstorte 3</span>
-                </div>
-            </div>
-
-            <!-- Image 83 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF8816.jpg"
-                     alt="Hochzeitstorte 4">
-                <div class="overlay">
-                    <span>Hochzeitstorte 4</span>
-                </div>
-            </div>
-
-            <!-- Image 84 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF8829.jpg"
-                     alt="Hochzeitstorte 5">
-                <div class="overlay">
-                    <span>Hochzeitstorte 5</span>
-                </div>
-            </div>
-
-            <!-- Image 85 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF8849_bright.jpg"
-                     alt="Hochzeitstorte 6">
-                <div class="overlay">
-                    <span>Hochzeitstorte 6</span>
-                </div>
-            </div>
-
-            <!-- Image 86 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSCF3882.jpg"
-                     alt="Geburtstagskuchen">
-                <div class="overlay">
-                    <span>Geburtstagskuchen</span>
-                </div>
-            </div>
-
-            <!-- Image 87 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSCF3883.jpg"
-                     alt="Geburtstagskuchen 2">
-                <div class="overlay">
-                    <span>Geburtstagskuchen 2</span>
-                </div>
-            </div>
-
-            <!-- Image 88 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF8886.jpg"
-                     alt="Geburtstagskuchen 3">
-                <div class="overlay">
-                    <span>Geburtstagskuchen 3</span>
-                </div>
-            </div>
-
-            <!-- Image 89 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF8982.jpg"
-                     alt="Tanzabend">
-                <div class="overlay">
-                    <span>Tanzabend</span>
-                </div>
-            </div>
-
-            <!-- Image 90 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF9026.jpg"
-                     alt="Tanzabend 2">
-                <div class="overlay">
-                    <span>Tanzabend 2</span>
-                </div>
-            </div>
-
-            <!-- Image 91 -->
-            <div class="gallery-item">
-                <img src="fotos_feier/DSF9030.jpg"
-                     alt="Tanzabend 3">
-                <div class="overlay">
-                    <span>Tanzabend 3</span>
-                </div>
-            </div>
 
 
         </div>
@@ -1102,347 +469,6 @@
 
         <!-- Horizontal Scrollable Gallery -->
         <div class="scroll-gallery" id="scrollGallery2">
-            <!-- Image 1 -->
-            <div class="gallery-item">
-                <img src="fotos_kirche/DSF6832.jpg"
-                     alt="Chor Einzug">
-                <div class="overlay">
-                    <span>Chor Einzug</span>
-                </div>
-            </div>
-
-            <!-- Image 2 -->
-            <div class="gallery-item">
-                <img src="fotos_kirche/DSF6834.jpg"
-                     alt="Erwartungsvoll">
-                <div class="overlay">
-                    <span>Erwartungsvoll</span>
-                </div>
-            </div>
-
-            <!-- Image 3 -->
-            <div class="gallery-item">
-                <img src="fotos_kirche/wa_2.jpeg"
-                     alt="Der Einzug">
-                <div class="overlay">
-                    <span>Der Einzug</span>
-                </div>
-            </div>
-
-            <!-- Image 4 -->
-            <div class="gallery-item">
-                <img src="fotos_kirche/wa_9.jpeg"
-                     alt="Der Einzug 2">
-                <div class="overlay">
-                    <span>Der Einzug 2</span>
-                </div>
-            </div>
-
-            <!-- Image 5 -->
-            <div class="gallery-item">
-                <img src="fotos_kirche/wa_11.jpeg"
-                     alt="Der erste Kontakt">
-                <div class="overlay">
-                    <span>Der erste Kontakt</span>
-                </div>
-            </div>
-
-            <!-- Image 6 -->
-            <div class="gallery-item">
-                <img src="fotos_kirche/wa_12.jpeg"
-                     alt="Gemeinsamer Anfang">
-                <div class="overlay">
-                    <span>Gemeinsamer Anfang</span>
-                </div>
-            </div>
-
-            <!-- Image 7 -->
-            <div class="gallery-item">
-                <img src="fotos_kirche/DSF6862.jpg"
-                     alt="Flüchtiger Blick">
-                <div class="overlay">
-                    <span>Flüchtiger Blick</span>
-                </div>
-            </div>
-
-            <!-- Image 8 -->
-            <div class="gallery-item">
-                <img src="fotos_kirche/DSF6874.jpg"
-                     alt="Gesangssolo">
-                <div class="overlay">
-                    <span>Gesangssolo</span>
-                </div>
-            </div>
-
-            <!-- Image 9 -->
-            <div class="gallery-item">
-                <img src="fotos_kirche/wa_10.jpeg"
-                     alt="Kirchengäste">
-                <div class="overlay">
-                    <span>Kirchengäste</span>
-                </div>
-            </div>
-
-            <!-- Image 10 -->
-            <div class="gallery-item">
-                <img src="fotos_kirche/wa_8.jpeg"
-                     alt="Die Kirche">
-                <div class="overlay">
-                    <span>Die Kirche</span>
-                </div>
-            </div>
-
-            <!-- Image 11 -->
-            <div class="gallery-item">
-                <img src="fotos_kirche/wa_6.jpeg"
-                     alt="Der Chor">
-                <div class="overlay">
-                    <span>Der Chor</span>
-                </div>
-            </div>
-
-            <!-- Image 12 -->
-            <div class="gallery-item">
-                <img src="fotos_kirche/DSCF3060.jpg"
-                     alt="Pfr. Fank Schneider">
-                <div class="overlay">
-                    <span>Pfr. Frank Schneider</span>
-                </div>
-            </div>
-
-            <!-- Image 13 -->
-            <div class="gallery-item">
-                <img src="fotos_kirche/wa_1.jpeg"
-                     alt="Wilkommen">
-                <div class="overlay">
-                    <span>Wilkommen</span>
-                </div>
-            </div>
-
-            <!-- Image 14 -->
-            <div class="gallery-item">
-                <img src="fotos_kirche/DSF6913.jpg"
-                     alt="Predigt">
-                <div class="overlay">
-                    <span>Predigt</span>
-                </div>
-            </div>
-
-            <!-- Image 15 -->
-            <div class="gallery-item">
-                <img src="fotos_kirche/DSF6945.jpg"
-                     alt="Ringtausch">
-                <div class="overlay">
-                    <span>Ringtausch</span>
-                </div>
-            </div>
-
-            <!-- Image 16 -->
-            <div class="gallery-item">
-                <img src="fotos_kirche/DSF6967.jpg"
-                     alt="Kerze">
-                <div class="overlay">
-                    <span>Kerze</span>
-                </div>
-            </div>
-
-            <!-- Image 17 -->
-            <div class="gallery-item">
-                <img src="fotos_kirche/DSF6990.jpg"
-                     alt="Alle zusammen">
-                <div class="overlay">
-                    <span>Alle Zusammen</span>
-                </div>
-            </div>
-
-            <!-- Image 18 -->
-            <div class="gallery-item">
-                <img src="fotos_kirche/DSF6997.jpg"
-                     alt="Gospelauszug 1">
-                <div class="overlay">
-                    <span>Gospelauszug 1</span>
-                </div>
-            </div>
-
-            <!-- Image 19 -->
-            <div class="gallery-item">
-                <img src="fotos_kirche/DSF6999.jpg"
-                     alt="Gospelauszug 2">
-                <div class="overlay">
-                    <span>Gospelauszug 2</span>
-                </div>
-            </div>
-
-            <!-- Image 20 -->
-            <div class="gallery-item">
-                <img src="fotos_kirche/wa_7.jpeg"
-                     alt="Gospelauszug 3">
-                <div class="overlay">
-                    <span>Gospelauszug 3</span>
-                </div>
-            </div>
-
-            <!-- Image 21 -->
-            <div class="gallery-item">
-                <img src="fotos_kirche/DSF7011.jpg"
-                     alt="Gospelauszug 4">
-                <div class="overlay">
-                    <span>Gospelauszug 4</span>
-                </div>
-            </div>
-
-            <!-- Image 22 -->
-            <div class="gallery-item">
-                <img src="fotos_kirche/DSF7017.jpg"
-                     alt="Gospelauszug 5">
-                <div class="overlay">
-                    <span>Gospelauszug 5</span>
-                </div>
-            </div>
-
-            <!-- Image 23 -->
-            <div class="gallery-item">
-                <img src="fotos_kirche/DSF7027.jpg"
-                     alt="Blumenkinder 1">
-                <div class="overlay">
-                    <span>Blumenkinder 1</span>
-                </div>
-            </div>
-
-            <!-- Image 24 -->
-            <div class="gallery-item">
-                <img src="fotos_kirche/DSF7036.jpg"
-                     alt="Blumenkinder 2">
-                <div class="overlay">
-                    <span>Blumenkinder 2</span>
-                </div>
-            </div>
-
-            <!-- Image 25 -->
-            <div class="gallery-item">
-                <img src="fotos_kirche/DSF7042.jpg"
-                     alt="Auszug">
-                <div class="overlay">
-                    <span>Auszug</span>
-                </div>
-            </div>
-
-            <!-- Image 26 -->
-            <div class="gallery-item">
-                <img src="fotos_kirche/DSF7052.jpg"
-                     alt="Tanzen">
-                <div class="overlay">
-                    <span>Tanzen</span>
-                </div>
-            </div>
-
-            <!-- Image 27 -->
-            <div class="gallery-item">
-                <img src="fotos_kirche/wa_13.jpeg"
-                     alt="Wir kommen">
-                <div class="overlay">
-                    <span>Wir kommen</span>
-                </div>
-            </div>
-
-            <!-- Image 28 -->
-            <div class="gallery-item">
-                <img src="fotos_kirche/DSF7050.jpg"
-                     alt="Wunderhelfer">
-                <div class="overlay">
-                    <span>Wunderhelfer</span>
-                </div>
-            </div>
-
-            <!-- Image 29 -->
-            <div class="gallery-item">
-                <img src="fotos_kirche/DSF7066.jpg"
-                     alt="Applaus">
-                <div class="overlay">
-                    <span>Applaus</span>
-                </div>
-            </div>
-
-            <!-- Image 30 -->
-            <div class="gallery-item">
-                <img src="fotos_kirche/DSF7057.jpg"
-                     alt="Gemeinsamer Weg">
-                <div class="overlay">
-                    <span>Gemeinsamer Weg</span>
-                </div>
-            </div>
-
-            <!-- Image 31 -->
-            <div class="gallery-item">
-                <img src="fotos_kirche/DSF7378.jpg"
-                     alt="Ich trage sie">
-                <div class="overlay">
-                    <span>Ich trage sie</span>
-                </div>
-            </div>
-
-            <!-- Image 32 -->
-            <div class="gallery-item">
-                <img src="fotos_kirche/DSF7379.jpg"
-                     alt="Ich trage sie 2">
-                <div class="overlay">
-                    <span>Ich trage sie 2</span>
-                </div>
-            </div>
-
-            <!-- Image 33 -->
-            <div class="gallery-item">
-                <img src="fotos_kirche/wa_5.jpeg"
-                     alt="Ich trage sie 3">
-                <div class="overlay">
-                    <span>Ich trage sie 3</span>
-                </div>
-            </div>
-
-            <!-- Image 34 -->
-            <div class="gallery-item">
-                <img src="fotos_kirche/DSF7379.jpg"
-                     alt="Seifenblasen">
-                <div class="overlay">
-                    <span>Seifenblasen</span>
-                </div>
-            </div>
-
-            <!-- Image 35 -->
-            <div class="gallery-item">
-                <img src="fotos_kirche/DSF7381.jpg"
-                     alt="Seifenblasen 2">
-                <div class="overlay">
-                    <span>Seifenblasen 2</span>
-                </div>
-            </div>
-
-            <!-- Image 36 -->
-            <div class="gallery-item">
-                <img src="fotos_kirche/DSF7386.jpg"
-                     alt="Seifenblasen 3">
-                <div class="overlay">
-                    <span>Seifenblasen 3</span>
-                </div>
-            </div>
-
-            <!-- Image 37 -->
-            <div class="gallery-item">
-                <img src="fotos_kirche/wa_3.jpeg"
-                     alt="Familie">
-                <div class="overlay">
-                    <span>Familie</span>
-                </div>
-            </div>
-
-            <!-- Image 38 -->
-            <div class="gallery-item">
-                <img src="fotos_kirche/wa_4.jpeg"
-                     alt="Seifenbläser">
-                <div class="overlay">
-                    <span>Seifenbläser</span>
-                </div>
-            </div>
 
         </div>
     </div>
@@ -1457,194 +483,6 @@
 
         <!-- Horizontal Scrollable Gallery -->
         <div class="scroll-gallery" id="scrollGallery3">
-            <!-- Image 1 -->
-            <div class="gallery-item">
-                <img src="fotos_shooting/DSF0006.jpg"
-                     alt="Ein kurzer Blick">
-                <div class="overlay">
-                    <span>Ein kurzer Blick</span>
-                </div>
-            </div>
-
-            <!-- Image 2 -->
-            <div class="gallery-item">
-                <img src="fotos_shooting/DSF0047.jpg"
-                     alt="Auf dem Weg">
-                <div class="overlay">
-                    <span>Auf dem Weg</span>
-                </div>
-            </div>
-
-            <!-- Image 3 -->
-            <div class="gallery-item">
-                <img src="fotos_shooting/DSF0079.jpg"
-                     alt="Blumenstrauss">
-                <div class="overlay">
-                    <span>Blumenstrauss</span>
-                </div>
-            </div>
-
-            <!-- Image 4 -->
-            <div class="gallery-item">
-                <img src="fotos_shooting/DSF0144.jpg"
-                     alt="Ein Kuss">
-                <div class="overlay">
-                    <span>Ein Kuss</span>
-                </div>
-            </div>
-
-            <!-- Image 5 -->
-            <div class="gallery-item">
-                <img src="fotos_shooting/DSF0158.jpg"
-                     alt="Hinter Blumen">
-                <div class="overlay">
-                    <span>Hinter Blumen</span>
-                </div>
-            </div>
-
-            <!-- Image 5 -->
-            <div class="gallery-item">
-                <img src="fotos_shooting/DSF0158.jpg"
-                     alt="Hinter Blumen">
-                <div class="overlay">
-                    <span>Hinter Blumen</span>
-                </div>
-            </div>
-
-            <!-- Image 6 -->
-            <div class="gallery-item">
-                <img src="fotos_shooting/DSF0214.jpg"
-                     alt="Ich nehme sie mit">
-                <div class="overlay">
-                    <span>Ich nehme sie mit</span>
-                </div>
-            </div>
-
-            <!-- Image 7 -->
-            <div class="gallery-item">
-                <img src="fotos_shooting/DSF0448.jpg"
-                     alt="Spaziergang">
-                <div class="overlay">
-                    <span>Spaziergang</span>
-                </div>
-            </div>
-
-            <!-- Image 8 -->
-            <div class="gallery-item">
-                <img src="fotos_shooting/DSF0478.jpg"
-                     alt="Ganz nah">
-                <div class="overlay">
-                    <span>Ganz nah</span>
-                </div>
-            </div>
-
-            <!-- Image 9 -->
-            <div class="gallery-item">
-                <img src="fotos_shooting/DSF0585.jpg"
-                     alt="Im Tanz">
-                <div class="overlay">
-                    <span>Im Tanz</span>
-                </div>
-            </div>
-
-            <!-- Image 10 -->
-            <div class="gallery-item">
-                <img src="fotos_shooting/DSF9057.jpg"
-                     alt="Allessagender Blick">
-                <div class="overlay">
-                    <span>Allessagender Blick</span>
-                </div>
-            </div>
-
-            <!-- Image 11 -->
-            <div class="gallery-item">
-                <img src="fotos_shooting/DSF9079.jpg"
-                     alt="Umarmt">
-                <div class="overlay">
-                    <span>Umarmt</span>
-                </div>
-            </div>
-
-            <!-- Image 12 -->
-            <div class="gallery-item">
-                <img src="fotos_shooting/DSF9091.jpg"
-                     alt="Gemeinsam stark">
-                <div class="overlay">
-                    <span>Gemeinsam stark</span>
-                </div>
-            </div>
-
-            <!-- Image 13 -->
-            <div class="gallery-item">
-                <img src="fotos_shooting/DSF9321.jpg"
-                     alt="Innig">
-                <div class="overlay">
-                    <span>Innig</span>
-                </div>
-            </div>
-
-            <!-- Image 14 -->
-            <div class="gallery-item">
-                <img src="fotos_shooting/DSF9355.jpg"
-                     alt="Begegnung">
-                <div class="overlay">
-                    <span>Begegnung</span>
-                </div>
-            </div>
-
-            <!-- Image 15 -->
-            <div class="gallery-item">
-                <img src="fotos_shooting/DSF9513.jpg"
-                     alt="Im Blumenmeer">
-                <div class="overlay">
-                    <span>Im Blumenmeer</span>
-                </div>
-            </div>
-
-            <!-- Image 16 -->
-            <div class="gallery-item">
-                <img src="fotos_shooting/DSF9721.jpg"
-                     alt="Zärtlich">
-                <div class="overlay">
-                    <span>Zärtlich</span>
-                </div>
-            </div>
-
-            <!-- Image 17 -->
-            <div class="gallery-item">
-                <img src="fotos_shooting/DSF9744.jpg"
-                     alt="Abenteuer">
-                <div class="overlay">
-                    <span>Abenteuer</span>
-                </div>
-            </div>
-
-            <!-- Image 18 -->
-            <div class="gallery-item">
-                <img src="fotos_shooting/DSF9884.jpg"
-                     alt="Das Paar in klein">
-                <div class="overlay">
-                    <span>Das Paar in klein</span>
-                </div>
-            </div>
-
-            <!-- Image 19 -->
-            <div class="gallery-item">
-                <img src="fotos_shooting/DSF9901.jpg"
-                     alt="Die Bank">
-                <div class="overlay">
-                    <span>Die Bank</span>
-                </div>
-            </div>
-
-            <!-- Image 20 -->
-            <div class="gallery-item">
-                <img src="fotos_shooting/DSF9995.jpg"
-                     alt="Gemeinsamer Weg">
-                <div class="overlay">
-                    <span>Gemeinsamer Weg</span>
-                </div>
-            </div>
         </div>
     </div>
     
@@ -1739,6 +577,17 @@
                         const walk = (x - startX) * 1.5;
                         scrollGallery.scrollLeft = scrollLeft - walk;
                     });
+                    
+                    scrollGallery.addEventListener('click', (event) => {
+                      const clickedItem = event.target.closest('.gallery-item');
+
+                      if (clickedItem) {
+                          // If a click occurred within a .gallery-item
+                          const imgSrc = clickedItem.querySelector('img').src;
+                          zoomedImage.src = imgSrc;
+                          zoomOverlay.classList.add('active');
+                      }
+                    });
                 }
 
                 // Navigation button functionality for this specific gallery
@@ -1768,6 +617,471 @@
             zoomOverlay.addEventListener('click', () => {
                 zoomOverlay.classList.remove('active'); // Hide the overlay
             });
+        });
+    </script>
+
+    <script src="zip-full.min.js"></script>
+    <script>
+        // Ordered from smallest to largest (fastest to slowest to load)
+        const galleryZipConfigs = [
+            {zipUrl:'fotos_shooting.zip', id:'scrollGallery3'},
+            {zipUrl:'fotos_kirche.zip', id:'scrollGallery2'},
+            {zipUrl:'fotos_feier_part1.zip', id:'scrollGallery1'},
+            {zipUrl:'fotos_feier_part2.zip', id:'scrollGallery1'},
+            {zipUrl:'fotos_feier_part3.zip', id:'scrollGallery1'},
+            {zipUrl:'fotos_feier_part4.zip', id:'scrollGallery1'},
+            {zipUrl:'fotos_feier_part5.zip', id:'scrollGallery1'}
+        ];
+
+        const passwordInput = document.getElementById('passwordInput');
+        const unlockButton = document.getElementById('unlockButton');
+        const messageDiv = document.getElementById('message');
+        const passwordOverlay = document.getElementById('password-overlay');
+
+        // Add event listener for "Enter" key on the password input field
+        passwordInput.addEventListener('keydown', (event) => {
+            // Check if the pressed key is 'Enter' (key code 13)
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Prevent default form submission behavior (if any)
+                unlockButton.click();   // Programmatically trigger a click on the unlock button
+            }
+        });
+        // Get the new password toggle icon element
+        const passwordToggle = document.getElementById('passwordToggle');
+
+        // Event listener to show/hide the toggle icon based on input content
+        passwordInput.addEventListener('input', () => {
+            if (passwordInput.value.length > 0) {
+                passwordToggle.classList.add('visible');
+            } else {
+                passwordToggle.classList.remove('visible');
+            }
+        });
+
+        // Event listener to toggle password visibility when the icon is clicked
+        passwordToggle.addEventListener('click', () => {
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text'; // Change to text to show password
+                passwordToggle.textContent = 'visibility_off'; // Use Material Icon for crossed eye
+                passwordToggle.title = 'Hide password'; // Add a tooltip
+            } else {
+                passwordInput.type = 'password'; // Change back to password to hide
+                passwordToggle.textContent = 'visibility'; // Use Material Icon for open eye
+                passwordToggle.title = 'Show password'; // Add a tooltip
+            }
+            passwordInput.focus(); // Keep focus on the input field after toggling
+        });
+
+        // --- NEW: Function to fetch metadata.json on page load ---
+        async function fetchGlobalMetadata() {
+            try {
+                const response = await fetch('metadata.json');
+                if (!response.ok) {
+                    console.error('Failed to fetch metadata.json:', response.statusText);
+                    metadata = {}; // Ensure it's an empty object on failure
+                    return;
+                }
+                metadata = await response.json();
+                console.log('Global metadata loaded:', metadata);
+            } catch (error) {
+                console.error('Error loading or parsing metadata.json:', error);
+                metadata = {}; // Ensure it's an empty object on error
+            }
+            return metadata;
+        }
+        
+        // --- Call this function when the script loads ---
+        let metadata = fetchGlobalMetadata();
+        
+
+
+        // Global variable to store the fetched correct password hash
+        let correctPasswordHash = null; // Will be populated from password.hash file
+        // Function to fetch password.hash
+        async function fetchPasswordHash() {
+            try {
+                const response = await fetch('password.hash');
+                if (!response.ok) {
+                    console.error('Error fetching password.hash:', response.statusText);
+                    messageDiv.textContent = 'Error: Password file not found or accessible. Galleries cannot load.';
+                    messageDiv.style.color = 'red';
+                    unlockButton.disabled = true; // Disable unlock if hash can't be fetched
+                    return;
+                }
+                correctPasswordHash = (await response.text()).trim();
+                console.log('password.hash loaded successfully.');
+                // Re-enable unlock button if it was disabled due to prior fetch error
+                unlockButton.disabled = false; 
+            } catch (error) {
+                console.error('Error loading password.hash:', error);
+                messageDiv.textContent = 'Error: Could not load password file. Galleries cannot load.';
+                messageDiv.style.color = 'red';
+                unlockButton.disabled = true; // Disable unlock if hash fails to load
+            }
+        }
+        fetchPasswordHash(); // Load the hash file
+
+        // Function to hash user input for comparison
+        async function hashUserInput(password) {
+            const textEncoder = new TextEncoder();
+            const data = textEncoder.encode(password);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hexHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            return hexHash;
+        }
+        
+        
+        // Map to temporarily store all collected image blobs per gallery (filename -> blob)
+        // This is crucial for sorting before display
+        const galleryCollectedBlobs = new Map(); // Map: galleryId -> Map: filename -> blob
+
+
+        // --- New function to create a gallery item and attach its zoom listener ---
+        function createGalleryItem(imageObject, imageBlob) {
+            const galleryItem = document.createElement('div');
+            galleryItem.classList.add('gallery-item');
+
+            const img = document.createElement('img');
+            img.src = URL.createObjectURL(imageBlob);
+
+            const title = imageObject.title || imageObject.filename.replace(/_/g, ' '); 
+            
+            img.alt = title;
+
+            const overlayDiv = document.createElement('div');
+            overlayDiv.classList.add('overlay');
+            const span = document.createElement('span');
+            span.textContent = title;
+            overlayDiv.appendChild(span);
+
+            galleryItem.appendChild(img);
+            galleryItem.appendChild(overlayDiv);
+
+            // Attach click listener for zoom to this specific gallery item
+            galleryItem.addEventListener('click', () => {
+                zoomedImage.src = img.src; // Use the img.src from this created element
+                zoomOverlay.classList.add('active');
+            });
+
+            return galleryItem;
+        }
+        // --- End createGalleryItem function ---
+        const totalGalleries = galleryZipConfigs.length;
+
+            // Clear all gallery divs initially
+            galleryZipConfigs.forEach(config => {
+                const currentGalleryDiv = document.getElementById(config.id);
+                if (currentGalleryDiv) {
+                    currentGalleryDiv.innerHTML = '';
+                }
+            });
+
+        unlockButton.addEventListener('click', async () => {
+            const password = passwordInput.value;
+            // Clear message for overlay (it will be hidden soon)
+            messageDiv.textContent = ''; 
+
+            if (!password) {
+                // Keep password overlay if no password is entered
+                messageDiv.textContent = 'Please enter a password.';
+                messageDiv.style.color = 'red';
+                return;
+            }
+
+            if (!correctPasswordHash) {
+                messageDiv.textContent = 'Password system not ready. Please try again or refresh.';
+                messageDiv.style.color = 'orange';
+                console.error('Correct password hash not loaded yet when unlock button clicked.');
+                return;
+            }
+
+            try {
+                const enteredPasswordHash = await hashUserInput(password);
+                if (enteredPasswordHash !== correctPasswordHash) {
+                    messageDiv.textContent = 'Incorrect password. Please try again.';
+                    messageDiv.style.color = 'red';
+                    // Do NOT hide the overlay if password is wrong
+                    passwordInput.value = ''; // Clear password field
+                    console.warn('Incorrect password hash entered. Stopping decryption attempt.');
+                    return; // Stop execution
+                }
+            } catch (hashError) {
+                console.error('Error hashing user input for comparison:', hashError);
+                messageDiv.textContent = 'An internal error occurred during password validation.';
+                messageDiv.style.color = 'red';
+                return; // Stop execution
+            }
+
+            // --- IMPORTANT CHANGE HERE: Hide the password overlay immediately ---
+            passwordOverlay.classList.add('hidden');
+
+            let passwordErrorOccurredInAnyGallery = false; // Flag for actual ZIP decryption errors
+            let allWorkerPromises = [];
+
+            // Map to track the overall status for each logical gallery ID
+            let galleryProcessStatus = new Map();
+
+            // FIRST PASS: Initialize galleryProcessStatus by counting total expected parts for each unique gallery ID
+            const uniqueGalleryIds = new Set();
+            galleryZipConfigs.forEach(config => {
+                if (!config.id || !config.zipUrl) {
+                    console.warn("Skipping invalid gallery config:", config);
+                    return;
+                }
+
+                if (!galleryProcessStatus.has(config.id)) {
+                    galleryProcessStatus.set(config.id, {
+                        totalExpectedParts: 0,
+                        successfulPartsCount: 0,
+                        hasError: false,
+                        totalImagesFromSuccessfulParts: 0
+                    });
+                    uniqueGalleryIds.add(config.id);
+                    // Initialize the new structure for blobs for this gallery
+                    galleryCollectedBlobs.set(config.id, {
+                        fullBlobs: new Map(), // Stores "01_DSF0006.jpg" -> blob
+                        cleanedToFullFilenameMap: new Map() // Stores "DSF0006" -> "01_DSF0006.jpg"
+                    });
+                }
+                galleryProcessStatus.get(config.id).totalExpectedParts++;
+            });
+
+            // Clear all gallery divs and inject loading indicators
+            uniqueGalleryIds.forEach(id => {
+                const currentGalleryDiv = document.getElementById(id);
+                if (currentGalleryDiv) {
+                    currentGalleryDiv.innerHTML = `
+                        <div class="gallery-placeholder" id="placeholder-${id}">
+                            <div class="spinner"></div>
+                            <p>Gallery is being loaded...</p>
+                        </div>
+                    `;
+                    currentGalleryDiv.classList.remove('loaded-grid'); // Ensure grid layout is off initially
+                } else {
+                    console.error(`Error: HTML element with ID "${id}" not found. Cannot set up loading indicator.`);
+                    const status = galleryProcessStatus.get(id);
+                    if (status) status.hasError = true;
+                }
+            });
+
+
+            // SECOND PASS: Create workers for each individual ZIP file entry
+            for (const config of galleryZipConfigs) {
+                if (!config.id || !config.zipUrl) continue; 
+
+                const currentGalleryDiv = document.getElementById(config.id);
+                if (!currentGalleryDiv) {
+                    continue;
+                }
+
+                const workerPromise = new Promise((resolve) => {
+                    const worker = new Worker('zip_worker.js');
+
+                    worker.postMessage({
+                        id: config.id,
+                        zipUrl: config.zipUrl,
+                        password: password
+                    });
+
+                    worker.onmessage = (event) => {
+                        const { id: returnedGalleryId, status, message, images, isPasswordError } = event.data;
+                        const galleryStatus = galleryProcessStatus.get(returnedGalleryId);
+                        const targetGalleryDiv = document.getElementById(returnedGalleryId);
+                        const placeholder = document.getElementById(`placeholder-${returnedGalleryId}`);
+
+
+                        if (status === 'success') {
+                            let imagesInCurrentPart = 0;
+                            // Get the specific gallery's blob storage maps
+                            const currentGalleryMaps = galleryCollectedBlobs.get(returnedGalleryId);
+
+                            images.forEach(imageInfo => {
+                                // Store the full blob data (e.g., "01_DSF0006.jpg" -> blob)
+                                currentGalleryMaps.fullBlobs.set(imageInfo.filename, imageInfo.blob); 
+
+                                // Derive cleaned filename (e.g., "DSF0006" from "01_DSF0006.jpg")
+                                const baseFilenameNoExt = imageInfo.filename.split('/').pop().split('.')[0];
+                                const cleanedFilename = baseFilenameNoExt.replace(/^\d+_/, '');
+
+                                // Store mapping from cleaned filename to full filename
+                                // IMPORTANT: This assumes cleanedFilename is unique. If not, the last one loaded wins.
+                                if (currentGalleryMaps.cleanedToFullFilenameMap.has(cleanedFilename)) {
+                                     console.warn(`Duplicate cleaned filename '${cleanedFilename}' found for gallery '${returnedGalleryId}'. Only the last loaded image for this base name will be used.`);
+                                }
+                                currentGalleryMaps.cleanedToFullFilenameMap.set(cleanedFilename, imageInfo.filename);
+
+                                imagesInCurrentPart++;
+                            });
+
+                            if (galleryStatus) {
+                                galleryStatus.successfulPartsCount++;
+                                galleryStatus.totalImagesFromSuccessfulParts += imagesInCurrentPart; // Track all found images for total count
+                            }
+                            
+                            // --- CRITICAL: Check if ALL parts for this gallery are loaded ---
+                            if (galleryStatus.successfulPartsCount === galleryStatus.totalExpectedParts && !galleryStatus.hasError) {
+                                // All parts loaded for this gallery, now sort and append
+                                if (placeholder) {
+                                    placeholder.remove(); // Remove loading placeholder
+                                }
+                                targetGalleryDiv.innerHTML = ''; // Clear gallery div completely (including any previous placeholder)
+                                targetGalleryDiv.classList.add('loaded-grid'); // Apply grid display
+
+                                // Get the ordered list of image metadata from metadata.json
+                                const orderedImageMetadata = metadata[returnedGalleryId];
+                                
+                                if (orderedImageMetadata && Array.isArray(orderedImageMetadata)) {
+                                    const fragment = document.createDocumentFragment();
+                                    let actualImagesAppended = 0;
+
+                                    orderedImageMetadata.forEach(imageObject => {
+                                        // imageObject.filename is the cleaned name from metadata (e.g., "DSF0006")
+                                        const fullFilenameWithExt = currentGalleryMaps.cleanedToFullFilenameMap.get(imageObject.filename);
+                                        let blob = null;
+
+                                        if (fullFilenameWithExt) {
+                                            blob = currentGalleryMaps.fullBlobs.get(fullFilenameWithExt); // Get the blob using the full filename
+                                        }
+
+                                        if (blob) {
+                                            const galleryItem = createGalleryItem(imageObject, blob); // Pass imageObject and blob
+                                            fragment.appendChild(galleryItem);
+                                            actualImagesAppended++;
+                                        } else {
+                                            console.warn(`Image '${imageObject.filename}' listed in metadata for gallery '${returnedGalleryId}' but not found in any loaded ZIP part.`);
+                                        }
+                                    });
+                                    targetGalleryDiv.appendChild(fragment);
+                                    // Update galleryStatus.totalImagesFromSuccessfulParts based on *actual* appended images
+                                    galleryStatus.totalImagesFromSuccessfulParts = actualImagesAppended;
+                                } else {
+                                    console.warn(`No ordered metadata (or it's not an array) found for gallery '${returnedGalleryId}'. Images will be displayed in arbitrary order based on worker completion.`);
+                                    // Fallback: If no ordered metadata, append whatever we collected in arbitrary order
+                                    const fragment = document.createDocumentFragment();
+                                    currentGalleryMaps.fullBlobs.forEach((blob, filename) => {
+                                        const baseFilenameNoExt = fullFilename.split('/').pop().split('.')[0];
+                                        const derivedCleanedName = baseFilenameNoExt.replace(/^\d+_/, '');
+                                        const derivedTitle = derivedCleanedName.replace(/_/g, ' '); // Use cleaned name for fallback title
+                                        const galleryItem = createGalleryItem({filename: derivedCleanedName, title: derivedTitle}, blob); 
+                                        fragment.appendChild(galleryItem);
+                                    });
+                                    targetGalleryDiv.appendChild(fragment);
+                                    galleryStatus.totalImagesFromSuccessfulParts = currentGalleryMaps.fullBlobs.size;
+                                }
+                                // Clear collected blobs for this gallery to free memory
+                                galleryCollectedBlobs.delete(returnedGalleryId);
+                            }
+                            resolve({ status: 'success', id: returnedGalleryId, imagesLoadedThisPart: imagesInCurrentPart });
+
+
+                        } else if (status === 'error') {
+                            if (isPasswordError) {
+                                passwordErrorOccurredInAnyGallery = true; 
+                            } else {
+                                if (placeholder) {
+                                    placeholder.classList.add('error');
+                                    placeholder.innerHTML = `<p style="color:red;">Error loading part: ${message}</p>`;
+                                    placeholder.querySelector('.spinner')?.remove();
+                                } else {
+                                     console.error(`Error loading ${config.zipUrl}: ${message}`);
+                                }
+                            }
+                            if (galleryStatus) galleryStatus.hasError = true;
+                            if (galleryStatus.successfulPartsCount < galleryStatus.totalExpectedParts) { 
+                                galleryStatus.successfulPartsCount++; 
+                            }
+                            
+                            if (galleryStatus.successfulPartsCount === galleryStatus.totalExpectedParts && galleryStatus.hasError) {
+                                if (placeholder) {
+                                    placeholder.classList.add('error');
+                                    placeholder.innerHTML = `<p style="color:red;">Gallery failed to load completely.</p>`;
+                                    placeholder.querySelector('.spinner')?.remove();
+                                }
+                                galleryCollectedBlobs.delete(returnedGalleryId);
+                            }
+                            resolve({ status: 'error', id: returnedGalleryId, message: message, isPasswordError: isPasswordError });
+                        }
+                        worker.terminate();
+                    };
+
+                    worker.onerror = (errorEvent) => {
+                        const returnedGalleryId = config.id; // Use config.id as onerror doesn't return id directly
+                        const galleryStatus = galleryProcessStatus.get(returnedGalleryId);
+                        const placeholder = document.getElementById(`placeholder-${returnedGalleryId}`);
+
+                        console.error(`Worker error for ${config.zipUrl}:`, {
+                            message: errorEvent.message,
+                            filename: errorEvent.filename,
+                            lineno: errorEvent.lineno,
+                            colno: errorEvent.colno,
+                            error: errorEvent.error
+                        });
+
+                        if (placeholder) {
+                            placeholder.classList.add('error');
+                            placeholder.innerHTML = `<p style="color:red;">An unexpected error occurred loading this gallery part. Check console.</p>`;
+                            placeholder.querySelector('.spinner')?.remove();
+                        } else {
+                             // Fallback if placeholder already removed or not found (less likely for onerror)
+                             console.error(`An unexpected error occurred with worker for ${config.zipUrl}.`);
+                        }
+                        
+                        if (galleryStatus) galleryStatus.hasError = true;
+                        if (galleryStatus.successfulPartsCount < galleryStatus.totalExpectedParts) {
+                            galleryStatus.successfulPartsCount++;
+                        }
+                        if (galleryStatus.successfulPartsCount === galleryStatus.totalExpectedParts && galleryStatus.hasError) {
+                            galleryCollectedBlobs.delete(returnedGalleryId);
+                        }
+                        resolve({ status: 'error', id: config.id, message: `Worker failed unexpectedly for ${config.zipUrl}.` });
+                        worker.terminate();
+                    };
+                });
+                allWorkerPromises.push(workerPromise);
+            }
+
+            await Promise.all(allWorkerPromises);
+
+            let successfulGalleriesOverall = 0;
+            let totalImagesDisplayed = 0;
+            const numUniqueGalleries = uniqueGalleryIds.size;
+
+            galleryProcessStatus.forEach(status => {
+                if (status.hasError && status.totalImagesFromSuccessfulParts === 0) {
+                     const placeholder = document.getElementById(`placeholder-${status.id}`);
+                     if (placeholder && !passwordErrorOccurredInAnyGallery) { 
+                         placeholder.innerHTML = `<p style="color:red;">Gallery failed to load completely.</p>`;
+                         placeholder.classList.add('error');
+                         placeholder.querySelector('.spinner')?.remove();
+                     }
+                } else if (status.totalImagesFromSuccessfulParts > 0) {
+                     totalImagesDisplayed += status.totalImagesFromSuccessfulParts;
+                }
+
+                if (status.successfulPartsCount === status.totalExpectedParts && !status.hasError) {
+                    successfulGalleriesOverall++;
+                }
+            });
+
+
+            // --- Consolidated and improved final message handling ---
+            if (passwordErrorOccurredInAnyGallery) {
+                // This indicates that the password, even if the hash matched, was rejected by zip.js for one or more ZIPs.
+                // This could happen if password.hash is out of sync with ZIP encryption, or a rare collision.
+                messageDiv.textContent = 'Incorrect password for one or more galleries. Please try again.';
+                messageDiv.style.color = 'red';
+                passwordOverlay.classList.remove('hidden'); // Show overlay again
+                console.error('Final result: Incorrect password for one or more galleries (ZIP decryption failed).');
+            } else if (successfulGalleriesOverall === numUniqueGalleries) {
+                messageDiv.textContent = ''; // Clear message on success
+                console.log(`Final result: Successfully unlocked all ${numUniqueGalleries} galleries. Displayed ${totalImagesDisplayed} images.`);
+            } else {
+                messageDiv.textContent = 'Some galleries failed to load. Check console for details or try again.';
+                messageDiv.style.color = 'orange'; 
+                console.warn(`Final result: Completed processing. Successfully unlocked ${successfulGalleriesOverall} of ${numUniqueGalleries} galleries. Displayed ${totalImagesDisplayed} images. Some galleries might have failed or loaded partially.`);
+            }
+            passwordInput.value = ''; // Always clear the password field after an attempt
         });
     </script>
 </body>
